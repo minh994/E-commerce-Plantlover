@@ -1,0 +1,111 @@
+﻿@using Cs_Plantlover.Areas.Admin.Models
+@using Cs_Plantlover.Models
+@using Twilio.TwiML.Messaging
+@model Cs_Plantlover.ViewModels.OrderDetailsViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center">Thông Tin Hóa Đơn</h2>
+<hr />
+<div class="container mt-10">
+    <div class="card common-card">
+        <div class="card-header text-white text-center">
+            <h3>Hóa đơn</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Mã đơn hàng:</strong> @Model.orderHeader.Id ---*****</p>
+            <p><strong>Tên khách hàng:</strong> @Model.orderHeader.User.FullName ---*****</p>
+            <p><strong>Email:</strong> @Model.orderHeader.User.Email ---*****</p>
+            <p><strong>Số điện thoại:</strong> @Model.orderHeader.PhoneNumber ---*****</p>
+            <p><strong>Địa chỉ:</strong> @Model.orderHeader.StreetAddress, @Model.orderHeader.Village, @Model.orderHeader.User.District, @Model.orderHeader.City ---*****</p>
+            <p><strong>Tổng hóa đơn:</strong> @Model.orderHeader.OrderTotal ---*****</p>
+            <p><strong>Trạng thái đơn hàng:</strong> @Model.orderHeader.OrderStatus ---*****</p>
+            <p><strong>Trạng thái thanh toán:</strong> @Model.orderHeader.PaymentStatus ---*****</p>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="order-details common-card">
+    <h3 class="text-center">Chi Tiết Hóa Đơn</h3>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr class="card-header">
+                <th>Sản phẩm</th>
+                <th></th>
+                <th>Số lượng</th>
+                <th>Giá bán</th>
+                <th>Tổng tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.orderDetails)
+            {
+                <tr>
+                    <td>@item.DanhMucSP.TenSP</td>
+                    <td>
+                        <img src="@item.DanhMucSP.AnhDaiDien" alt="Hinh Anh San Pham" style="width: 100px; height: 100px;" />
+                    </td>
+                    <td>@item.Count</td>
+                    <td>@item.Price</td>
+                    <td>@(item.Count * item.Price)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Nút in hóa đơn -->
+<div class="text-center mt-4">
+    <a asp-action="Index" class="btn btn-primary">Trở lại danh sách</a>
+    <button class="btn btn-primary" onclick="window.print()">In Hóa Đơn</button>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+    }
+
+    .common-card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #7eae37;
+        color: white;
+    }
+
+    .card-body p {
+        margin-bottom: 0.5rem;
+    }
+
+    .order-details table {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    
+    Media print {
+    /* Ẩn các thành phần không cần thiết khi in */
+            body *
+
+        {
+            display: block;
+        }
+
+        .order-header, .order-header * {
+            display: none;
+        }
+
+        .order-details, .order-details * {
+            display: none;
+        }
+    }
+</style>
